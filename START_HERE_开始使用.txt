@@ -1,0 +1,278 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                          ║
+║          🎉 条件扩散模型用于时间序列表征学习 - 开始使用指南 🎉            ║
+║                                                                          ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+📍 项目位置
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  /workspace/conditional_diffusion_ts/
+
+
+📚 第一步：阅读文档
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  🔰 初次使用（必读）：
+     /workspace/conditional_diffusion_ts_overview.md
+     
+  📖 快速入门（5分钟）：
+     /workspace/conditional_diffusion_ts/QUICKSTART.md
+     
+  📕 完整文档（详细）：
+     /workspace/conditional_diffusion_ts/README.md
+     
+  🎓 技术深入：
+     /workspace/conditional_diffusion_ts/PROJECT_SUMMARY.md
+
+
+🚀 第二步：快速体验
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  方式1：运行示例代码（推荐首次使用）
+  ────────────────────────────────
+  $ cd /workspace/conditional_diffusion_ts/examples
+  $ python basic_usage.py
+  
+  这将演示：
+    ✅ 创建合成数据
+    ✅ 初始化模型
+    ✅ 提取时间序列表征
+    ✅ 生成新样本
+    ✅ 重构数据
+    ✅ 简短训练演示
+  
+  
+  方式2：使用Python交互式体验
+  ────────────────────────────
+  $ cd /workspace/conditional_diffusion_ts
+  $ python
+  
+  >>> from models import ConditionalDiffusionTS
+  >>> import torch
+  >>> 
+  >>> # 创建模型
+  >>> model = ConditionalDiffusionTS(
+  ...     input_dim=1,
+  ...     seq_len=100,
+  ...     encoder_type='transformer'
+  ... )
+  >>> 
+  >>> # 测试
+  >>> x = torch.randn(10, 100, 1)
+  >>> output = model(x, return_loss=True)
+  >>> print(f"损失: {output['loss'].item():.4f}")
+
+
+🔧 第三步：安装依赖（如需要）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  
+  $ cd /workspace/conditional_diffusion_ts
+  $ pip install -r requirements.txt
+  
+  主要依赖：
+    • PyTorch >= 2.0.0
+    • NumPy >= 1.24.0
+    • Scikit-learn >= 1.3.0
+    • Matplotlib >= 3.7.0
+
+
+🎯 第四步：开始训练
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  使用默认配置训练
+  ────────────────────────────
+  $ cd /workspace/conditional_diffusion_ts
+  $ python train.py
+  
+  
+  使用特定配置训练
+  ────────────────────────────
+  $ python train.py --config configs/default_config.yaml
+  
+  可用的配置：
+    • configs/default_config.yaml       (Transformer编码器)
+    • configs/conv_config.yaml          (卷积编码器)
+    • configs/contrastive_config.yaml   (对比学习)
+  
+  
+  自定义参数训练
+  ────────────────────────────
+  $ python train.py \
+      --num_samples 10000 \
+      --seq_len 100 \
+      --batch_size 64 \
+      --num_epochs 100 \
+      --encoder_type transformer
+
+
+📊 第五步：评估模型
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  $ python evaluate.py \
+      --checkpoint ./checkpoints/best_model.pt \
+      --num_samples 1000 \
+      --output_dir ./outputs \
+      --visualize_tsne
+  
+  将生成：
+    ✅ outputs/reconstruction.png        (重构对比图)
+    ✅ outputs/generated_samples.png     (生成样本)
+    ✅ outputs/representations_pca.png   (PCA可视化)
+    ✅ outputs/representations_tsne.png  (t-SNE可视化)
+
+
+💡 实用技巧
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  选择合适的编码器
+  ────────────────────────────
+    场景                     推荐编码器
+    ──────────────────────────────────────
+    追求最佳性能             → Transformer
+    处理长序列               → Conv
+    快速原型/基线            → MLP
+    实时应用                 → Conv
+  
+  
+  调整训练参数
+  ────────────────────────────
+    参数              建议值                说明
+    ────────────────────────────────────────────────
+    num_timesteps    500-1000             扩散步数
+    batch_size       32-128               批次大小
+    lr               1e-4 ~ 3e-4          学习率
+    encoder_type     transformer          编码器类型
+    schedule_type    cosine               噪声调度
+  
+  
+  提升性能的方法
+  ────────────────────────────
+    ✓ 使用余弦噪声调度 (schedule_type='cosine')
+    ✓ 增加训练轮数 (num_epochs=200)
+    ✓ 使用对比学习 (use_contrastive=true)
+    ✓ 增加模型容量 (encoder_dim=512)
+
+
+📖 核心功能说明
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  1. 表征学习
+     ─────────
+     提取时间序列的高质量特征表征
+     应用：分类、聚类、相似度搜索
+  
+  2. 数据生成
+     ─────────
+     生成新的时间序列样本
+     应用：数据增强、仿真
+  
+  3. 数据重构
+     ─────────
+     重构/去噪时间序列
+     应用：异常检测、数据清洗
+  
+  4. 对比学习
+     ─────────
+     自监督表征学习
+     应用：预训练、迁移学习
+
+
+🎓 学习路径建议
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  对于初学者：
+    1️⃣  阅读 conditional_diffusion_ts_overview.md
+    2️⃣  运行 examples/basic_usage.py
+    3️⃣  阅读 QUICKSTART.md
+    4️⃣  尝试训练简单模型
+    5️⃣  阅读完整 README.md
+  
+  对于研究者：
+    1️⃣  阅读 README.md 理解算法
+    2️⃣  阅读 PROJECT_SUMMARY.md 了解实现
+    3️⃣  修改模型架构进行实验
+    4️⃣  在自己的数据上测试
+  
+  对于工程师：
+    1️⃣  查看 QUICKSTART.md 快速上手
+    2️⃣  选择合适的配置文件
+    3️⃣  集成到现有系统
+    4️⃣  监控性能和调优
+
+
+❓ 常见问题
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Q1: 训练很慢怎么办？
+  ────────────────────────────
+  A: • 减少 num_timesteps (1000→500)
+     • 使用 Conv 编码器
+     • 增加 batch_size
+     • 减少 encoder_layers
+  
+  
+  Q2: 内存不足？
+  ────────────────────────────
+  A: • 减小 batch_size
+     • 使用 MLP 编码器
+     • 减少 seq_len
+     • 关闭注意力机制
+  
+  
+  Q3: 如何用自己的数据？
+  ────────────────────────────
+  A: 参考 data/dataset.py 中的 TimeSeriesDataset
+     
+     from data import TimeSeriesDataset
+     dataset = TimeSeriesDataset(
+         data=your_data,  # numpy array
+         seq_len=100,
+         normalize=True
+     )
+
+
+📞 获取帮助
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  文档位置：
+    📄 项目总览    /workspace/conditional_diffusion_ts_overview.md
+    📄 快速入门    /workspace/conditional_diffusion_ts/QUICKSTART.md
+    📄 完整文档    /workspace/conditional_diffusion_ts/README.md
+    📄 交付总结    /workspace/项目交付总结.md
+  
+  示例代码：
+    💻 基本使用    /workspace/conditional_diffusion_ts/examples/basic_usage.py
+  
+  配置文件：
+    ⚙️  默认配置    configs/default_config.yaml
+    ⚙️  卷积配置    configs/conv_config.yaml
+    ⚙️  对比学习    configs/contrastive_config.yaml
+
+
+✨ 项目特色
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ✅ 完整实现     从数据到模型到应用的全流程
+  ✅ 模块化设计   清晰的代码结构，易于扩展
+  ✅ 灵活配置     多种编码器和训练策略
+  ✅ 详尽文档     完整的使用说明和API文档
+  ✅ 开箱即用     提供示例和预设配置
+
+
+🎉 开始您的探索之旅
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  现在，选择一个方式开始：
+  
+    🚀 快速体验  → python examples/basic_usage.py
+    📚 深入学习  → 阅读 QUICKSTART.md
+    🔬 开始研究  → 修改配置并训练
+    💼 实际应用  → 在您的数据上测试
+
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                          ║
+║                        祝您使用愉快！ 🎊🚀                                ║
+║                                                                          ║
+╚══════════════════════════════════════════════════════════════════════════╝
+

@@ -1,0 +1,43 @@
+# 默认配置文件
+
+# 数据参数
+data_type: 'synthetic'
+num_samples: 10000
+seq_len: 100
+input_dim: 1
+pattern_type: 'mixed'  # sine, random_walk, periodic, mixed
+
+# 模型参数
+encoder_type: 'transformer'  # transformer, conv, mlp
+encoder_dim: 256
+encoder_layers: 4
+num_timesteps: 1000
+schedule_type: 'linear'  # linear, cosine, quadratic
+
+# UNet参数
+unet_hidden_dims: [64, 128, 256, 512]
+time_emb_dim: 128
+use_attention: true
+
+# 训练参数
+batch_size: 64
+num_epochs: 100
+lr: 0.0001
+weight_decay: 0.01
+use_contrastive: false
+
+# 优化器和调度器
+optimizer: 'adamw'
+scheduler: 'cosine'
+
+# 其他参数
+device: 'cuda'
+checkpoint_dir: './checkpoints'
+log_interval: 100
+eval_interval: 1000
+seed: 42
+num_workers: 4
+
+# 数据增强参数（用于对比学习）
+augmentation_prob: 0.8
+temperature: 0.07

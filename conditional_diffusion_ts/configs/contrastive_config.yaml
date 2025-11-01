@@ -1,0 +1,38 @@
+# 对比学习配置
+
+# 数据参数
+data_type: 'synthetic'
+num_samples: 20000
+seq_len: 100
+input_dim: 1
+pattern_type: 'mixed'
+
+# 模型参数
+encoder_type: 'transformer'
+encoder_dim: 512
+encoder_layers: 6
+num_timesteps: 1000
+schedule_type: 'cosine'
+
+# UNet参数
+unet_hidden_dims: [128, 256, 512, 1024]
+time_emb_dim: 256
+use_attention: true
+
+# 训练参数
+batch_size: 128
+num_epochs: 200
+lr: 0.0003
+weight_decay: 0.01
+use_contrastive: true
+
+# 对比学习参数
+augmentation_prob: 0.8
+temperature: 0.07
+
+# 其他参数
+device: 'cuda'
+checkpoint_dir: './checkpoints_contrastive'
+log_interval: 100
+eval_interval: 1000
+seed: 42
